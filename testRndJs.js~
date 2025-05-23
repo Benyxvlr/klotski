@@ -1,0 +1,2 @@
+const gridW = 4;
+const gridH = 5;

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="cssGen.css">
+</head>
+<body>
+
+
+<script src="jvGen.js"></script>
+<div class="nazev"><img src="Klotski.logo.png" height="100" width="200"/></div>
+<button class="button-rules" id="back-to-rules-page"><a href="index.html">Zpátky</a></button>
+<div class="center">
+    <div class="button-boxes">
+        <div class="box1">
+
+            <button class="buttons-reset" id="resetBtn">Reset</button>
+
+
+        </div>
+        <div class="box2">
+            <button class="buttons" id="ConfigurationRandom" onclick="RandomConfiguration()">Generovat</button>
+
+        </div>
+    </div>
+    <div class="background-box" id="background">
+
+        <div id="greenCarpet" class="greenCarpet"></div>
+        <div id="board"></div>
+
+    </div>
+
+</div>
+
+<div id="youWin"></div>
+
+</body>
+</html>

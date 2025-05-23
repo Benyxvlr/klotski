@@ -1,0 +1,220 @@
+//STRUKTURA
+const board = document.getElementById("board");
+const gridSize = 60;
+const moves = document.getElementById("moves");
+const timerEl = document.getElementById("demo");
+const levelInfo = document.getElementById("levelInfo");
+let MovesCounter = 0, gameWon = false, seconds = 0, minutes = 0;
+let timer = setInterval(incrementSeconds, 1000);
+let blocks = [];
+let currentLevel = 1;
+
+//RESET BUTTON
+document.getElementById("resetBtn").addEventListener("click", () => {
+    if (currentLevel === 1) Configuration1();
+    else if (currentLevel === 2) Configuration2();
+    else if (currentLevel === 3) Configuration3();
+});
+
+
+function setLevel(level) {
+    currentLevel = level;
+    levelInfo.innerText = `Level ${level}`;
+}
+
+document.getElementById("randomBtn").addEventListener("click", () => {
+    RandomConfiguration();
+});
+
+//RESETACE STATU
+function ResetButton() {
+    board.innerHTML = "";
+    MovesCounter = 0;
+    moves.textContent = "Moves: 0";
+    seconds = 0;
+    minutes = 0;
+    timerEl.innerText = `Timer 00:00`;
+    clearInterval(timer);
+    timer = setInterval(incrementSeconds, 1000);
+    gameWon = false;
+    document.getElementById("youWin").innerText = "";
+}
+
+//Časovač
+function incrementSeconds() {
+    if (MovesCounter > 0 && !gameWon) {
+        seconds++;
+        if (seconds === 60) { minutes++; seconds = 0; }
+        timerEl.innerText = `Timer ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
+
+//Načtení konfigurace
+
+function loadConfiguration(config) {
+    ResetButton();
+    blocks = config.map(b => ({ ...b }));
+    blocks.forEach(block => {
+        const div = document.createElement("div");
+        div.classList.add("block");
+        if (block.main) div.classList.add("main");
+        Object.assign(div.style, {
+            width: `${block.w * gridSize}px`,
+            height: `${block.h * gridSize}px`,
+            left: `${block.x * gridSize}px`,
+            top: `${block.y * gridSize}px`
+        });
+        div.dataset.id = block.id;
+        board.appendChild(div);
+        makeDraggable(div, block);
+    });
+}
+
+//POHYB
+
+function makeDraggable(el, block) {
+    let offsetX = 0, offsetY = 0, isDragging = false;
+
+    const start = (x, y) => {
+        offsetX = x - block.x * gridSize;
+        offsetY = y - block.y * gridSize;
+        isDragging = true;
+    };
+
+    const move = (x, y) => {
+        if (!isDragging) return;
+        el.style.left = `${x - offsetX}px`;
+        el.style.top = `${y - offsetY}px`;
+    };
+
+    const end = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        const newGridX = Math.round(parseInt(el.style.left) / gridSize);
+        const newGridY = Math.round(parseInt(el.style.top) / gridSize);
+        if (isMoveAllowed(block, newGridX, newGridY)) {
+            if (block.x !== newGridX || block.y !== newGridY) {
+                MovesCounter++;
+                moves.textContent = "Moves: " + MovesCounter;
+            }
+            block.x = newGridX;
+            block.y = newGridY;
+        }
+        el.style.left = `${block.x * gridSize}px`;
+        el.style.top = `${block.y * gridSize}px`;
+        checkWin();
+    };
+
+    el.addEventListener("mousedown", e => { start(e.clientX, e.clientY); e.preventDefault(); });
+    document.addEventListener("mousemove", e => move(e.clientX, e.clientY));
+    document.addEventListener("mouseup", end);
+    el.addEventListener("touchstart", e => { start(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); });
+    el.addEventListener("touchmove", e => { move(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); });
+    el.addEventListener("touchend", end);
+}
+
+
+function isMoveAllowed(block, newX, newY) {
+    if (newX < 0 || newY < 0 || newX + block.w > 4 || newY + block.h > 5) return false;
+    const dx = Math.abs(newX - block.x), dy = Math.abs(newY - block.y);
+    if ((dx + dy) !== 1) return false;
+    return !blocks.some(other => other !== block && isOverlapping(newX, newY, block.w, block.h, other.x, other.y, other.w, other.h));
+}
+
+function isOverlapping(x1, y1, w1, h1, x2, y2, w2, h2) {
+    return !(x1 + w1 <= x2 || x1 >= x2 + w2 || y1 + h1 <= y2 || y1 >= y2 + h2);
+}
+
+
+
+function checkWin() {
+    const main = blocks.find(b => b.main);
+    if (!gameWon && main.x === 1 && main.y === 3) {
+        gameWon = true;
+        document.getElementById("youWin").innerText = levelInfo.innerText + " - HOTOVEJ!";
+        clearInterval(timer);
+        document.getElementById("greenCarpet").style.display = "none";
+        document.getElementById("back-to-rules-page").style.display = "none";
+        document.getElementById("resetBtn").style.display = "none";
+    }
+}
+
+//Konfigurace
+function Configuration1() {
+    document.getElementById("greenCarpet").style.display = "block";
+    document.getElementById("back-to-rules-page").style.display = "block";
+    document.getElementById("rules").textContent = "";
+    document.getElementById("resetBtn").style.display = "block";
+
+
+    setLevel(1);
+
+    loadConfiguration([
+        { id: "A", x: 1, y: 0, w: 2, h: 2, main: true },
+        { id: "B", x: 0, y: 0, w: 1, h: 1 },
+        { id: "C", x: 0, y: 1, w: 1, h: 1 },
+        { id: "D", x: 0, y: 2, w: 1, h: 1 },
+        { id: "E", x: 0, y: 3, w: 1, h: 1 },
+        { id: "F", x: 0, y: 4, w: 1, h: 1 },
+        { id: "G", x: 1, y: 2, w: 1, h: 1 },
+        { id: "H", x: 1, y: 3, w: 1, h: 1 },
+        { id: "I", x: 2, y: 3, w: 1, h: 1 },
+        { id: "J", x: 3, y: 4, w: 1, h: 1 },
+        { id: "L", x: 2, y: 2, w: 1, h: 1 },
+        { id: "M", x: 3, y: 3, w: 1, h: 1 },
+        { id: "N", x: 3, y: 0, w: 1, h: 1 },
+        { id: "O", x: 3, y: 1, w: 1, h: 1 },
+        { id: "P", x: 3, y: 2, w: 1, h: 1 },
+
+]);
+
+
+}
+
+function Configuration2() {
+    document.getElementById("greenCarpet").style.display = "block";
+    document.getElementById("back-to-rules-page").style.display = "block";
+    document.getElementById("rules").textContent = "";
+    document.getElementById("resetBtn").style.display = "block";
+
+
+    setLevel(2);
+    loadConfiguration([
+        { id: "A", x: 1, y: 0, w: 2, h: 2, main: true },
+        { id: "B", x: 0, y: 0, w: 1, h: 2 },
+        { id: "C", x: 0, y: 2, w: 1, h: 1 },
+        { id: "D", x: 3, y: 2, w: 1, h: 1 },
+        { id: "E", x: 3, y: 0, w: 1, h: 2 },
+        { id: "F", x: 1, y: 2, w: 2, h: 1 },
+        { id: "G", x: 1, y: 3, w: 1, h: 1 },
+        { id: "H", x: 0, y: 3, w: 1, h: 1 },
+        { id: "I", x: 3, y: 3, w: 1, h: 1 },
+        { id: "J", x: 3, y: 4, w: 1, h: 1 },
+        { id: "K", x: 0, y: 4, w: 1, h: 1 },
+        { id: "L", x: 2, y: 3, w: 1, h: 1 },
+    ]);
+
+
+}
+
+function Configuration3() {
+    document.getElementById("back-to-rules-page").style.display = "block";
+    document.getElementById("greenCarpet").style.display = "block";
+    document.getElementById("rules").textContent = "";
+    document.getElementById("resetBtn").style.display = "block";
+
+    setLevel(3);
+    loadConfiguration([
+        { id: "A", x: 1, y: 0, w: 2, h: 2, main: true },
+        { id: "B", x: 0, y: 0, w: 1, h: 2 },
+        { id: "C", x: 3, y: 0, w: 1, h: 2 },
+        { id: "D", x: 0, y: 2, w: 1, h: 2 },
+        { id: "E", x: 3, y: 2, w: 1, h: 2 },
+        { id: "F", x: 0, y: 4, w: 1, h: 1 },
+        { id: "G", x: 1, y: 2, w: 2, h: 1 },
+        { id: "H", x: 1, y: 3, w: 1, h: 1 },
+        { id: "I", x: 2, y: 3, w: 1, h: 1 },
+        { id: "J", x: 3, y: 4, w: 1, h: 1 },
+    ]);
+}
+

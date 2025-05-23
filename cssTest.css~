@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+#board {
+    position: relative;
+    width: 360px; /* 6 * 60 */
+    height: 360px; /* 6 * 60 */
+    border: 2px solid black;
+    margin: 20px auto;
+    background-color: #f0f0f0;
+}
+
+.block {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.block.main {
+    background-color: red;
+}
+
+#controls {
+    margin: 10px;
+}
+
+#youWin {
+    color: green;
+    font-weight: bold;
+    margin-top: 20px;
+}

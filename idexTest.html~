@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klotski</title>
+    <link rel="stylesheet" href="cssTest.css">
+</head>
+<body>
+<div class="center">
+    <div class="button-boxes">
+        
+        <div class="box2">
+            <button class="buttons" id="randomBtn" onclick="RandomConfiguration()">Generovat</button>
+        </div>
+    </div>
+    <div class="background-box">
+
+        <div id="greenCarpet" class="greenCarpet"></div>
+        <div id="board"></div>
+
+    </div>
+
+</div>
+<div class="stats-center">
+    <div class="stats">
+        <div id="demo">Timer 00:00</div>
+        <div id="moves">Moves: 0</div>
+    </div>
+</div>
+
+<div id="youWin"></div>
+
+
+</body>
+<script src="testRndJs.js"></script>
+
+</html>
+
+

@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klotski</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div class="nazev"><img src="Klotski.logo.png" height="100" width="200"/></div>
+        <div class="lvl" id="levelInfo">Vyber si obtížnost</div>
+                <button class="button-rules" id="back-to-rules-page" onClick="window.location.reload();">Zpátky k pravidlům</button>
+                <div class="center">
+                    <div class="button-boxes">
+                        <div class="box1">
+
+                            <button class="buttons-reset" id="resetBtn">Reset</button>
+
+                        </div>
+                        <div class="box2">
+                            <h2>OBTÍŽNOST</h2>
+                            <button class="buttons" id="Configuration1" onclick="Configuration1()">Lehká</button>
+                            <button class="buttons" id="Configuration2" onclick="Configuration2()">Normální</button>
+                            <button class="buttons" id="Configuration3" onclick="Configuration3()">Těžká</button>
+
+                        </div>
+                    </div>
+                    <div class="background-box" id="background">
+
+                            <div id="rules">
+                                <div class="rules"><strong>Pravidla hry:</strong></div>
+
+                                <div class="rules">Cíl hry:
+                                    <strong>Přesunout hlavní <span style="color: red">červený</span> blok do cílové pozice (<span style="color: green">zeleného</span> pozadí).</strong>
+                                </div>
+                                <div class="rules">Pohyb:
+                                    <strong>Bloky posouváš tažením myši nebo dotykem.</strong>
+                                </div>
+                                <div class="rules">Výhra:
+                                    <strong>Jakmile je hlavní <span style="color: red">červený</span> blok na <span style="color: green">zeleném</span> pozadí, hra končí výhrou.</strong>
+                                </div>
+                            </div>
+                                <div id="greenCarpet" class="greenCarpet"></div>
+                                <div id="board"></div>
+
+                        </div>
+
+                    </div>
+                        <div class="stats-center">
+                            <div class="stats">
+                                <div id="demo">Timer 00:00</div>
+                                <div id="moves">Moves: 0</div>
+                            </div>
+                        </div>
+
+                        <div id="youWin"></div>
+
+
+
+</body>
+<script src="jv.js"></script>
+</html>
+
+
